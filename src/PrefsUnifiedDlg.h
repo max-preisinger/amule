@@ -28,6 +28,8 @@
 
 #include <wx/dialog.h>		// Needed for wxDialog
 
+#include <iostream> // For Debugging reasons
+
 
 class Cfg_Base;
 class CDirectoryTreeCtrl;

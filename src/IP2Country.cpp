@@ -193,7 +193,6 @@ const CountryData& CIP2Country::GetCountryData(const wxString &ip)
 		it->second.Name = wxT("?");
 		return it->second;
 	}
-
 	// wxString::MakeLower() fails miserably in Turkish localization with their dotted/non-dotted 'i's
 	// So fall back to some good ole C string processing.
 	std::string strCode;
@@ -204,9 +203,7 @@ const CountryData& CIP2Country::GetCountryData(const wxString &ip)
 	for ( ; *c; c++) {
 		strCode += ((*c >= 'A' && *c <= 'Z') ? *c + 'a' - 'A' : *c);
 	}
-
 	const wxString CCode(strCode.c_str(), wxConvISO8859_1);
-
 	CountryDataMap::iterator it = m_CountryDataMap.find(CCode);
 	if (it == m_CountryDataMap.end()) {
 		// Show the code and ?? flag
@@ -218,7 +215,6 @@ const CountryData& CIP2Country::GetCountryData(const wxString &ip)
 			it->second.Name = CCode;
 		}
 	}
-
 	return it->second;
 }
 

@@ -680,8 +680,8 @@ void PrefsUnifiedDlg::OnOk(wxCommandEvent& WXUNUSED(event))
 	}
 
         if (CfgChanged(IDC_IPFC) && thePrefs::IsFilteringCountries()) {
-                theApp->serverlist->FilterServers();
-                theApp->clientlist->FilterQueues();
+                if (thePrefs::IsFilteringServers()) theApp->serverlist->FilterServers();
+                if (thePrefs::IsFilteringClients()) theApp->clientlist->FilterQueues();
                 AddDebugLogLineN(logIPFilter, wxT("Blacklist activated") );
         }
 

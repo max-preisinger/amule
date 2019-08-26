@@ -27,8 +27,13 @@
 #define IPFILTER_H
 
 #include <wx/event.h>	// Needed for wxEvent
+//#include <fstream> // For reading Country Blacklist File
+#include <string> // For Country Blacklist
+#include <sstream> // For Country Blacklist
+#include <iostream> // For Debugging
 
 #include "Types.h"	// Needed for uint8, uint16 and uint32
+#include "IP2Country.h" // For Country Blacklist
 
 class CIPFilterEvent;
 
@@ -99,6 +104,10 @@ public:
 	void	StartKADWhenReady() { m_startKADWhenReady = true; }
 	void	ConnectToAnyServerWhenReady() { m_connectToAnyServerWhenReady = true; }
 
+        // Helper Variables for Country Blacklist
+        wxString BlacklistContent;
+        CIP2Country *ip2c;
+
 private:
 	/** Handles the result of loading the dat-files. */
 	void	OnIPFilterEvent(CIPFilterEvent&);
@@ -129,6 +138,13 @@ private:
 
 	friend class CIPFilterEvent;
 	friend class CIPFilterTask;
+
+        // Helper Functions for Country Blacklist
+        /**
+         * This function compares the first two letters of the strings and returns,
+         * if they are equal (true) or not (false).
+         */
+        bool MatchCountryCode(std::string line, std::string IPCountry);
 
 	DECLARE_EVENT_TABLE()
 };

@@ -1755,8 +1755,6 @@ void CPreferences::SetFilteringCountries(bool val)
         if (val != s_IPFilterServers) {
                 s_IPFilterCountries = val;
                 if (val) {
-                    // Enable GeoIP, needed for checking origin of IP
-                    SetGeoIPEnabled(true);
                     // Filter the servers and queues for countries, if and only if
                     // the servers respectively the queues shall be filtered at all.
                     if (s_IPFilterServers) theApp->serverlist->FilterServers();

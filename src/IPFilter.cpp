@@ -45,6 +45,8 @@
 #include "ServerConnect.h"		// Needed for ConnectToAnyServer()
 #include "DownloadQueue.h"		// Needed for theApp->downloadqueue
 
+#include "IP2Country.h"
+
 
 ////////////////////////////////////////////////////////////
 // CIPFilterEvent
@@ -371,6 +373,22 @@ CIPFilter::CIPFilter() :
 	m_startKADWhenReady(false),
 	m_connectToAnyServerWhenReady(false)
 {
+        // TODO: This is the wrong place for this code (but it works...). Move it to the right place.
+        AddLogLineN(_("Loading Country Blacklist 'countryfilter.txt'."));
+        const wxString BlacklistFilename = (thePrefs::GetConfigDir() + wxT("countryfilter.txt"));
+        wxFFile CountryList;
+        if (CountryList.Open(BlacklistFilename)) {
+            CountryList.ReadAll(&BlacklistContent);
+            CountryList.Close();
+        }
+
+        // Init CIP2Country
+        ip2c = new CIP2Country(thePrefs::GetConfigDir());
+        ip2c->Enable();
+
+
+        //TODO: Create dummy file for countryfilter.txt
+
 	// Setup dummy files for the curious user.
 	const wxString normalDat = thePrefs::GetConfigDir() + wxT("ipfilter.dat");
 	const wxString normalMsg = wxString()
@@ -403,6 +421,15 @@ CIPFilter::CIPFilter() :
 
 void CIPFilter::Reload()
 {
+        // TODO: This is the wrong place for this code (but it works...). Move it to the right place.
+        AddLogLineN(_("Loading Country Blacklist 'countryfilter.txt'."));
+        const wxString BlacklistFilename = (thePrefs::GetConfigDir() + wxT("countryfilter.txt"));
+        wxFFile CountryList;
+        if (CountryList.Open(BlacklistFilename)) {
+            CountryList.ReadAll(&BlacklistContent);
+            CountryList.Close();
+        }
+
 	// We keep the current filter till the new one has been loaded.
 	CThreadScheduler::AddTask(new CIPFilterTask(this));
 }
@@ -459,16 +486,27 @@ bool CIPFilter::IsFiltered(uint32 IPTest, bool isServer)
 		}
 	}
 
-        // Inserted Country Blacklist here
-
         // Perform checks, if blacklist is activated and IP is not filtered yet anyways
         if (thePrefs::IsFilteringCountries() && !found) {
-            // Use IP2Country to get the country
 
-            // Check country against blacklist file (~/.amule/countryfilter.txt)
+            // Get the Country Code from IP
+            const wxString IPTestString = Uint32toStringIP(IPTest);
+            CountryData IPCountryData = ip2c->GetCountryData(IPTestString);
+            wxString wxIPCountry = IPCountryData.Name.MakeUpper();
+            std::string IPCountry = std::string(wxIPCountry.mb_str());
+            //AddDebugLogLineN(logIPFilter, CFormat(wxT("IsFiltered IPCountry: %s")) % IPCountry);
 
+            // Filter the blacklisted countries out
+            std::string countries = std::string(BlacklistContent.mb_str());
+            std::istringstream CountriesStream(countries);
+            std::string line;
+            while (std::getline (CountriesStream,line)) {
+                if (MatchCountryCode(line, IPCountry)) {
+                    found = true;
+                    break;
+                }
+            }
         }
-        // End of: Inserted Country Blacklist here
 
 	if (found) {
 		AddDebugLogLineN(logIPFilter, CFormat(wxT("Filtered IP %s%s")) % Uint32toStringIP(IPTest)
@@ -482,6 +520,11 @@ bool CIPFilter::IsFiltered(uint32 IPTest, bool isServer)
 		return true;
 	}
 	return false;
+}
+
+bool CIPFilter::MatchCountryCode(std::string line, std::string IPCountry) {
+    if (IPCountry.length() < 2 || line.length() < 2) return false;
+    return (IPCountry.compare(0,2,line) == 0);
 }
 
 
