@@ -19,6 +19,10 @@ src/pixmaps/flags_xpm/CountryFlags.h
 src/pixmaps/flags_xpm/Makefile.am
 test-driver
 
+# Build folders
+build/*
+docs/docs/*
+
 # Files created by building the project
 # in a directory other than where the sources live
 po/*.gmo
