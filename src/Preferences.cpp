@@ -1180,6 +1180,7 @@ void CPreferences::BuildItemList( const wxString& appdir )
 	NewCfgItem(IDC_IPFILTERURL,	(new Cfg_Str(  wxT("/eMule/IPFilterURL"), s_IPFilterURL, wxEmptyString )));
 	NewCfgItem(ID_IPFILTERLEVEL,	(MkCfg_Int( wxT("/eMule/FilterLevel"), s_filterlevel, 127 )));
 	NewCfgItem(IDC_IPFILTERSYS,	(new Cfg_Bool( wxT("/eMule/IPFilterSystem"), s_IPFilterSys, false )));
+        NewCfgItem(IDC_IPFC,            (new Cfg_Bool( wxT("/eMule/IPFilterCountries"), s_IPFilterCountries, false )));
 
 	/**
 	 * Message Filter
@@ -1754,6 +1755,8 @@ void CPreferences::SetFilteringCountries(bool val)
         if (val != s_IPFilterServers) {
                 s_IPFilterCountries = val;
                 if (val) {
+                    // Enable GeoIP, needed for checking origin of IP
+                    SetGeoIPEnabled(true);
                     // Filter the servers and queues for countries, if and only if
                     // the servers respectively the queues shall be filtered at all.
                     if (s_IPFilterServers) theApp->serverlist->FilterServers();
