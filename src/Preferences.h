@@ -430,6 +430,8 @@ public:
 	static void		SetFilteringClients(bool val);
 	static bool		IsFilteringServers()		{ return s_IPFilterServers; }
 	static void		SetFilteringServers(bool val);
+        static bool             IsFilteringCountries()          { return s_IPFilterCountries; }
+        static void             SetFilteringCountries(bool val);
 	static uint8		GetIPFilterLevel()		{ return s_filterlevel;}
 	static void		SetIPFilterLevel(uint8 level);
 	static bool		IPFilterAutoLoad()		{ return s_IPFilterAutoLoad; }
@@ -734,6 +736,7 @@ protected:
 	// Kry - IPFilter
 	static bool	s_IPFilterClients;
 	static bool	s_IPFilterServers;
+        static bool     s_IPFilterCountries;
 	static uint8	s_filterlevel;
 	static bool	s_IPFilterAutoLoad;
 	static wxString s_IPFilterURL;

@@ -183,6 +183,7 @@ wxString	CPreferences::s_ECPassword;
 bool		CPreferences::s_TransmitOnlyUploadingClients;
 bool		CPreferences::s_IPFilterClients;
 bool		CPreferences::s_IPFilterServers;
+bool            CPreferences::s_IPFilterCountries;
 bool		CPreferences::s_UseSrcSeeds;
 bool		CPreferences::s_ProgBar;
 bool		CPreferences::s_Percent;
@@ -1740,12 +1741,25 @@ void CPreferences::SetFilteringClients(bool val)
 
 void CPreferences::SetFilteringServers(bool val)
 {
-	if (val != s_IPFilterServers) {
-		s_IPFilterServers = val;
-		if (val) {
-			theApp->serverlist->FilterServers();
-		}
-	}
+        if (val != s_IPFilterServers) {
+                s_IPFilterServers = val;
+                if (val) {
+                        theApp->serverlist->FilterServers();
+                }
+        }
+}
+
+void CPreferences::SetFilteringCountries(bool val)
+{
+        if (val != s_IPFilterServers) {
+                s_IPFilterCountries = val;
+                if (val) {
+                    // Filter the servers and queues for countries, if and only if
+                    // the servers respectively the queues shall be filtered at all.
+                    if (s_IPFilterServers) theApp->serverlist->FilterServers();
+                    if (s_IPFilterClients) theApp->clientlist->FilterQueues();
+                }
+        }
 }
 
 void CPreferences::SetIPFilterLevel(uint8 level)
