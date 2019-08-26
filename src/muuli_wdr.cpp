@@ -2906,6 +2906,10 @@ wxSizer *PreferencesSecurityTab( wxWindow *parent, bool call_fit, bool set_sizer
     item25->SetToolTip( _("If there's no local ipfilter.dat found, allow usage of a systemwide ipfilter file.") );
     item8->Add( item25, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5 );
 
+    wxCheckBox *item26 = new wxCheckBox( parent, IDC_IPFC, _("Activate Country Blacklist in ~/.aMule/countryfilter.txt"), wxDefaultPosition, wxDefaultSize, 0 );
+    item26->SetToolTip( _("") );
+    item8->Add( item26, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5 );
+
     item0->Add( item8, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
     if (set_sizer)
