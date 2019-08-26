@@ -418,6 +418,7 @@ uint32 CIPFilter::BanCount() const
 
 bool CIPFilter::IsFiltered(uint32 IPTest, bool isServer)
 {
+        // TODO: Change this to include country blacklisting (if ... else ... switch for IP Filtering and Country Filtering=
 	if ((!thePrefs::IsFilteringClients() && !isServer) || (!thePrefs::IsFilteringServers() && isServer)) {
 		return false;
 	}
@@ -458,6 +459,18 @@ bool CIPFilter::IsFiltered(uint32 IPTest, bool isServer)
 			imin = i + 1;
 		}
 	}
+
+        // Inserted Country Blacklist here
+        // See TODO above!!!
+
+        // Check if Country Filter is enabled in the settings.
+
+        // Use IP2Country to get the country
+
+        // Check country against blacklist file (~/.amule/countryfilter.txt)
+
+        // End of: Inserted Country Blacklist here
+
 	if (found) {
 		AddDebugLogLineN(logIPFilter, CFormat(wxT("Filtered IP %s%s")) % Uint32toStringIP(IPTest)
 			% (i < (int)m_rangeNames.size() ? (wxT(" (") + wxString(char2unicode(m_rangeNames[i].c_str())) + wxT(")"))
